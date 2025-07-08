@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        API Documentation: User & Subscriptions
+    </title>
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for better readability and aesthetics */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #374151; /* Dark gray text */
+        }
+        .header-bg {
+            background-color: #1a202c; /* Darker blue for header */
+        }
+        .chapter-heading {
+            color: #1f2937; /* Dark text for chapter headings */
+            border-bottom: 2px solid #60a5fa; /* Blue underline */
+            padding-bottom: 0.5rem;
+        }
+        .section-heading {
+            color: #1f2937; /* Dark text for section headings */
+        }
+        .endpoint-card {
+            background-color: #ffffff; /* White card background */
+            border: 1px solid #e5e7eb; /* Light border */
+        }
+        .http-method {
+            font-weight: 700; /* Bold */
+            color: #1e40af; /* Darker blue for method */
+        }
+        .http-path {
+            color: #4b5563; /* Gray for path */
+        }
+        .code-block {
+            background-color: #1f2937; /* Dark background for code */
+            color: #e5e7eb; /* Light text for code */
+            border-radius: 0.375rem; /* Rounded corners */
+            padding: 1rem;
+            overflow-x: auto; /* Enable horizontal scrolling for long lines */
+        }
+        .table-header {
+            background-color: #e5e7eb; /* Light gray for table header */
+            color: #374151; /* Dark gray for table header text */
+        }
+        .table-row:nth-child(even) {
+            background-color: #f9fafb; /* Slightly different background for even rows */
+        }
+        .auth-note {
+            background-color: #fffbeb; /* Light yellow for notes */
+            border-left: 4px solid #f59e0b; /* Orange left border */
+            color: #92400e; /* Dark orange text */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header Section -->
+    <header class="header-bg text-white p-6 shadow-lg rounded-b-lg">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-center">API Documentation</h1>
+            <p class="text-xl text-center mt-2 opacity-90">User Management and Subscriptions</p>
+            <p class="text-xl text-center mt-2 opacity-90">Before Match ID</p>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-8">
+
+        <!-- Introduction -->
+        <section class="mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold chapter-heading mb-6">Introduction</h2>
+            <p class="text-lg leading-relaxed">
+                This document outlines the Application Programming Interface (API) endpoints for user authentication, profile management, and subscription handling. It details the request formats, expected responses, and the state changes associated with different user subscription statuses within the application.
+            </p>
+            <p class="text-lg leading-relaxed mt-4">
+                <strong>Base URL:</strong> <code class="bg-gray-200 text-blue-700 px-2 py-1 rounded">http://localhost:5000</code>
+            </p>
+        </section>
+
+        <!-- Chapter 1: User Onboarding and Profile Management -->
+        <section class="mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold chapter-heading mb-6">Chapter 1: User Onboarding and Profile Management (Before Any Subscription)</h2>
+            <p class="text-lg leading-relaxed mb-8">
+                This chapter covers the initial steps a user takes, including requesting and verifying OTP (One-Time Password) for authentication, and subsequently updating their profile information.
+            </p>
+
+            <!-- 1.1 OTP Request -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">1.1 OTP Request</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">POST</span> <span class="http-path">/auth/request-otp</span></p>
+                <p class="text-gray-700 mb-4">Sends an OTP to the provided phone number. This is the first step in user registration or login.</p>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Request Body Example:</h4>
+                <pre class="code-block"><code>{
+  "phone": "+917004653005"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>phone</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The phone number to which the OTP will be sent, including the country code (e.g., "+91").</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": null,
+  "error": [],
+  "message": "OTP sent successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the OTP request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No specific data is returned for this endpoint on success.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 1.2 OTP Verification -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">1.2 OTP Verification</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">POST</span> <span class="http-path">/auth/verify-otp</span></p>
+                <p class="text-gray-700 mb-4">Verifies the OTP received by the user and issues a JSON Web Token (JWT) for subsequent authenticated requests.</p>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Request Body Example:</h4>
+                <pre class="code-block"><code>{
+  "phone": "+917004653005",
+  "otp": "3014"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>phone</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The phone number for which the OTP was requested.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>otp</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The OTP received by the user.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODZkMWJkZTU1MmJiMTY2MTRkNzkyN2EiLCJpYXQiOjE3NTE5ODEwMjIsImV4cCI6MTc1NDU3MzAyMn0.V7ZLLeDb0G6fGL1p_kSMnzkMFdjoLonEeo8kx_M_W64",
+    "user": {
+      "phone": "+917004653005",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          0,
+          0
+        ]
+      },
+      "isPremium": false,
+      "subscriptionEndsOn": null,
+      "bio": "",
+      "superMessageTokens": 0,
+      "lastTokenReset": null,
+      "dailySwipesUsed": 0,
+      "lastSwipeReset": null,
+      "plan": null,
+      "_id": "686d1bde552bb16614d7927a",
+      "createdAt": "2025-07-08T13:23:42.353Z",
+      "__v": 0
+    }
+  },
+  "error": [],
+  "message": "OTP verified successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the OTP verification was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Contains the authentication <code>token</code> and initial <code>user</code> details.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>token</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The JWT token required for authenticated API calls.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>user</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Basic user profile information upon successful verification.</td>
+                            </tr>
+                            <!-- Nested user fields -->
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>phone</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User's phone number.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>location</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Geographic location data (initially set to default).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-16"><code>type</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Type of location (e.g., "Point").</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-16"><code>coordinates</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Array of [longitude, latitude].</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>isPremium</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Flag indicating if the user has a premium subscription (false by default).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date when the subscription ends (null by default).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>bio</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User's biographical information (empty by default).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>superMessageTokens</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Number of super message tokens available (0 by default).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>lastTokenReset</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Timestamp of the last super message token reset.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>dailySwipesUsed</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Number of daily swipes used (0 by default).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>lastSwipeReset</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Timestamp of the last daily swipe reset.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Current subscription plan (null by default).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>_id</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Unique identifier for the user.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>createdAt</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Timestamp of user creation.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>__v</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Version key for the document.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 1.3 Update User Profile -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">1.3 Update User Profile</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">PUT</span> <span class="http-path">/users/profile</span></p>
+                <p class="text-gray-700 mb-4">Updates the current user's profile information. This endpoint requires authentication.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Request Body Example:</h4>
+                <pre class="code-block"><code>{
+  "nickname": "Gullu",
+  "position": "bottom",
+  "kamraHai": "YES",
+  "dob": "1998-07-01",
+  "location": {
+    "lat": 25.645,
+    "lng": 85.143
+  },
+  "bio": "Gullu Bio."
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>nickname</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User's chosen nickname.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>position</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User's preferred position (e.g., "bottom").</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>kamraHai</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A custom field, possibly indicating room availability (e.g., "YES").</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>dob</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date of birth in "YYYY-MM-DD" format.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>location</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Geographic coordinates.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>lat</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Latitude.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>lng</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Longitude.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>bio</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User's biographical information.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        85.143,
+        25.645
+      ]
+    },
+    "_id": "686d1bde552bb16614d7927a",
+    "phone": "+917004653005",
+    "isPremium": false,
+    "subscriptionEndsOn": null,
+    "bio": "Gullu Bio.",
+    "superMessageTokens": 0,
+    "lastTokenReset": null,
+    "dailySwipesUsed": 0,
+    "lastSwipeReset": null,
+    "plan": null,
+    "createdAt": "2025-07-08T13:23:42.353Z",
+    "__v": 0,
+    "nickname": "Gullu",
+    "position": "bottom",
+    "kamraHai": "YES",
+    "dob": "1998-07-01T00:00:00.000Z"
+  },
+  "error": [],
+  "message": "Profile updated successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the profile update was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The updated user profile object.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 1.4 Get Nearby Users -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">1.4 Get Nearby Users</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/users/nearby?position={position}&amp;kamraHai={kamraHai}&amp;distance={distance}</span></p>
+                <p class="text-gray-700 mb-4">Fetches a list of users located near the requesting user, filtered by <code>position</code>, <code>kamraHai</code>, and <code>distance</code>. This endpoint requires authentication.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Query Parameters:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Parameter</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>position</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Filter by user's position (e.g., "bottom").</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>kamraHai</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Filter by the "kamraHai" status (e.g., "YES").</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>distance</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Maximum distance in kilometers (or a defined unit) to search for nearby users.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Example:</h4>
+                <pre class="code-block"><code>GET http://localhost:5000/users/nearby?position=bottom&amp;kamraHai=YES&amp;distance=10</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": [
+    {
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          85.143,
+          25.645
+        ]
+      },
+      "superMessageTokens": 0,
+      "lastTokenReset": null,
+      "dailySwipesUsed": 0,
+      "lastSwipeReset": null,
+      "plan": null,
+      "_id": "686b8dc5d7108f6fa5dc0b76",
+      "phone": "+911234567890",
+      "isPremium": false,
+      "subscriptionEndsOn": null,
+      "bio": "Just here to meet cool people.",
+      "createdAt": "2025-07-07T09:05:09.553Z",
+      "dob": "2000-04-22T00:00:00.000Z",
+      "kamraHai": "YES",
+      "nickname": "Zmen",
+      "position": "bottom"
+    },
+    {
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          85.143,
+          25.645
+        ]
+      },
+      "plan": null,
+      "_id": "686d0762d719261ea9d6f7b7",
+      "phone": "+917004653000",
+      "isPremium": true,
+      "subscriptionEndsOn": "2025-08-07T12:18:37.725Z",
+      "bio": "Just here to meet cool people.",
+      "superMessageTokens": 20,
+      "lastTokenReset": "2025-07-08T12:18:37.729Z",
+      "dailySwipesUsed": 0,
+      "lastSwipeReset": null,
+      "createdAt": "2025-07-08T11:56:18.282Z",
+      "dob": "1998-07-01T00:00:00.000Z",
+      "kamraHai": "YES",
+      "nickname": "AbhishekGay",
+      "position": "bottom"
+    },
+    {
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          85.143,
+          25.645
+        ]
+      },
+      "bio": "",
+      "superMessageTokens": 0,
+      "lastTokenReset": null,
+      "dailySwipesUsed": 0,
+      "lastSwipeReset": null,
+      "plan": null,
+      "_id": "686b7d7f6f8c0077b63b9424",
+      "phone": "+917004653006",
+      "isPremium": true,
+      "subscriptionEndsOn": "2025-08-06T08:01:57.328Z",
+      "createdAt": "2025-07-07T07:55:43.609Z",
+      "age": 26,
+      "kamraHai": "YES",
+      "nickname": "Ymen",
+      "position": "bottom"
+    },
+    {
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          85.143,
+          25.645
+        ]
+      },
+      "lastSwipeReset": null,
+      "plan": null,
+      "_id": "686ce4b85dd833c01505bab9",
+      "phone": "+917004653009",
+      "isPremium": true,
+      "subscriptionEndsOn": "2025-08-07T12:15:51.818Z",
+      "bio": "Just here to meet cool people.",
+      "superMessageTokens": 0,
+      "lastTokenReset": null,
+      "createdAt": "2025-07-08T09:28:24.274Z",
+      "dob": "1998-07-07T00:00:00.000Z",
+      "kamraHai": "YES",
+      "nickname": "Sunnygay",
+      "position": "bottom",
+      "dailySwipesUsed": 0
+    }
+  ],
+  "error": [],
+  "message": "Nearby users fetched successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array of objects</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A list of nearby user profiles. Each object contains user details similar to the <code>/users/current</code> endpoint, plus <code>location</code> and other relevant fields.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 1.5 Get Current User Details -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">1.5 Get Current User Details</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/users/current</span></p>
+                <p class="text-gray-700 mb-4">Fetches the complete profile details of the currently authenticated user.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "_id": "686d1bde552bb16614d7927a",
+    "phone": "+917004653005",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        85.143,
+        25.645
+      ]
+    },
+    "isPremium": false,
+    "subscriptionEndsOn": null,
+    "bio": "Gullu Bio.",
+    "superMessageTokens": 0,
+    "lastTokenReset": null,
+    "dailySwipesUsed": 0,
+    "lastSwipeReset": null,
+    "plan": null,
+    "createdAt": "2025-07-08T13:23:42.353Z",
+    "dob": "1998-07-01T00:00:00.000Z",
+    "kamraHai": "YES",
+    "nickname": "Gullu",
+    "position": "bottom",
+    "age": 27
+  },
+  "error": [],
+  "message": "User fetched successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The comprehensive user profile, including:</td>
+                            </tr>
+                            <!-- Nested user fields -->
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>_id</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Unique user identifier.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>phone</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User's phone number.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>location</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User's geographic coordinates.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>type</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Type of location (e.g., "Point").</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>coordinates</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Array of [longitude, latitude].</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>isPremium</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the user has a premium subscription.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date when the current subscription ends.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>bio</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User's biographical information.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessageTokens</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Available super message tokens.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>lastTokenReset</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Timestamp of the last token reset.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>dailySwipesUsed</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Number of daily swipes consumed.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>lastSwipeReset</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Timestamp of the last daily swipe reset.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Current subscription plan.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>createdAt</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User creation timestamp.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>dob</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date of birth.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>kamraHai</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Custom field.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>nickname</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User's nickname.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>position</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">User's position.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>age</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Calculated age of the user.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 1.6 Get Application Configuration -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">1.6 Get Application Configuration</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/config</span></p>
+                <p class="text-gray-700 mb-4">This endpoint provides general application configuration and user-specific feature limits based on their subscription status.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "shareLink": "https://miloapp.in/invite",
+    "authOptions": [
+      "google",
+      "otp"
+    ],
+    "premiumUser": false,
+    "subscriptionEndsOn": null,
+    "plan": "none",
+    "superMessageTokens": 0,
+    "dailySwipeLimit": 0,
+    "allowDirectMessage": false
+  },
+  "error": [],
+  "message": "App config loaded"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Application configuration and user-specific allowances:</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>shareLink</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A link for sharing the application.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>authOptions</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array of strings</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Available authentication methods.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>premiumUser</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the current user is a premium user.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date when the subscription ends.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Current subscription plan ("none" if no active plan).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessageTokens</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Available super message tokens for the user.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>dailySwipeLimit</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Daily swipe limit for the user (0 if no subscription).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>allowDirectMessage</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if direct messaging is allowed for the user.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 1.7 Get Subscription Status -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">1.7 Get Subscription Status</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/subscription/status</span></p>
+                <p class="text-gray-700 mb-4">This endpoint provides a concise overview of the current user's subscription status.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "active": false,
+    "plan": null,
+    "renewalDate": null
+  },
+  "error": [],
+  "message": "No active subscription"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Subscription status details:</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>active</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">True if there is an active subscription, false otherwise.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The name of the active plan (null if no active plan).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>renewalDate</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The date the subscription is set to renew (null if no active plan).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 2: Basic Plan Subscription -->
+        <section class="mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold chapter-heading mb-6">Chapter 2: Basic Plan Subscription</h2>
+            <p class="text-lg leading-relaxed mb-8">
+                This chapter details the process of subscribing to the "Basic" plan and the subsequent changes in user capabilities and API responses.
+            </p>
+
+            <!-- 2.1 Initiate Basic Plan Subscription -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">2.1 Initiate Basic Plan Subscription</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">POST</span> <span class="http-path">/subscription</span></p>
+                <p class="text-gray-700 mb-4">Activates a subscription for the authenticated user based on the provided plan.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Request Body Example:</h4>
+                <pre class="code-block"><code>{ "plan": "basic" }</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The name of the plan to subscribe to (e.g., "basic").</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "subscription": {
+      "_id": "686d1ce2c1e583150b5faaab",
+      "userId": "686d1bde552bb16614d7927a",
+      "__v": 0,
+      "endDate": "2025-08-07T13:28:02.066Z",
+      "isActive": true,
+      "plan": "basic",
+      "startDate": "2025-07-08T13:28:02.066Z"
+    },
+    "isPremium": true,
+    "subscriptionEndsOn": "2025-08-07T13:28:02.066Z",
+    "superMessagesLeft": 0,
+    "swipes": 30,
+    "monthlyTokenAllowance": 0
+  },
+  "error": [],
+  "message": "Subscription activated"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the subscription activation was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Contains details about the newly activated subscription and updated user status.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscription</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Details of the subscription record.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>_id</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Unique subscription identifier.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>userId</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">ID of the user who subscribed.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>endDate</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date when the subscription will end.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>isActive</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Always <code>true</code> for an active subscription.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The subscribed plan name.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>startDate</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date when the subscription started.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>isPremium</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code> after activating a premium plan.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The calculated end date of the subscription.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessagesLeft</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Number of super messages granted by the plan.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>swipes</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Daily swipe limit granted by the plan.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>monthlyTokenAllowance</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Monthly allowance for tokens (e.g., for super messages).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2.2 Get Subscription Status (After Basic Plan) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">2.2 Get Subscription Status (After Basic Plan)</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/subscription/status</span></p>
+                <p class="text-gray-700 mb-4">This endpoint shows the updated subscription status after activating the basic plan.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "active": true,
+    "plan": "basic",
+    "renewalDate": "2025-08-07T13:41:07.097Z",
+    "swipeLimitPerDay": 30,
+    "monthlyTokenAllowance": 0,
+    "allowDirectMessage": false,
+    "autoRenew": true,
+    "superMessagesLeft": 0,
+    "swipesUsedToday": 0
+  },
+  "error": [],
+  "message": "Subscription active"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Updated subscription status details:</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>active</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code> because a plan is active.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">"basic" indicating the active plan.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>renewalDate</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The date the subscription is set to renew.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>swipeLimitPerDay</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Daily swipe limit (30 for basic).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>monthlyTokenAllowance</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Monthly token allowance (0 for basic).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>allowDirectMessage</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>false</code> as basic plan might not allow direct messages.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>autoRenew</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if auto-renewal is enabled.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessagesLeft</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Remaining super messages (0 for basic).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>swipesUsedToday</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Swipes used on the current day.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2.3 Get Application Configuration (After Basic Plan) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">2.3 Get Application Configuration (After Basic Plan)</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/config</span></p>
+                <p class="text-gray-700 mb-4">This endpoint shows the updated application configuration and feature limits after activating the basic plan.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "shareLink": "https://miloapp.in/invite",
+    "authOptions": [
+      "google",
+      "otp"
+    ],
+    "premiumUser": true,
+    "subscriptionEndsOn": "2025-08-07T13:41:07.097Z",
+    "plan": "basic",
+    "superMessageTokens": 0,
+    "dailySwipeLimit": 30,
+    "allowDirectMessage": false
+  },
+  "error": [],
+  "message": "App config loaded"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Updated application configuration and user-specific allowances, reflecting the "basic" plan.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>premiumUser</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date when the subscription ends.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">"basic".</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessageTokens</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">0.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>dailySwipeLimit</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">30.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>allowDirectMessage</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>false</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2.4 Get Current User Details (After Basic Plan) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">2.4 Get Current User Details (After Basic Plan)</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/users/current</span></p>
+                <p class="text-gray-700 mb-4">This endpoint shows the updated user profile reflecting the basic subscription.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "_id": "686d1bde552bb16614d7927a",
+    "phone": "+917004653005",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        85.143,
+        25.645
+      ]
+    },
+    "isPremium": true,
+    "subscriptionEndsOn": "2025-08-07T13:41:07.097Z",
+    "bio": "Gullu Bio.",
+    "superMessageTokens": 0,
+    "lastTokenReset": null,
+    "dailySwipesUsed": 0,
+    "lastSwipeReset": null,
+    "plan": "basic",
+    "createdAt": "2025-07-08T13:23:42.353Z",
+    "dob": "1998-07-01T00:00:00.000Z",
+    "kamraHai": "YES",
+    "nickname": "Gullu",
+    "position": "bottom",
+    "age": 27
+  },
+  "error": [],
+  "message": "User fetched successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The updated user profile, showing:</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>isPremium</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The end date of the basic subscription.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">"basic".</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessageTokens</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">0.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>dailySwipesUsed</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">0 (resets daily).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 3: Super Plan Subscription -->
+        <section class="mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold chapter-heading mb-6">Chapter 3: Super Plan Subscription</h2>
+            <p class="text-lg leading-relaxed mb-8">
+                This chapter covers the transition from a non-premium or basic plan to the "Super" plan, highlighting the enhanced features.
+            </p>
+
+            <!-- 3.1 Initiate Super Plan Subscription -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">3.1 Initiate Super Plan Subscription</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">POST</span> <span class="http-path">/subscription</span></p>
+                <p class="text-gray-700 mb-4">Activates a "super" subscription for the authenticated user, potentially overriding an existing plan.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Request Body Example:</h4>
+                <pre class="code-block"><code>{ "plan": "super" }</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The name of the plan to subscribe to (e.g., "super").</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "subscription": {
+      "_id": "686d1ce2c1e583150b5faaab",
+      "userId": "686d1bde552bb16614d7927a",
+      "__v": 0,
+      "endDate": "2025-08-07T13:44:43.553Z",
+      "isActive": true,
+      "plan": "super",
+      "startDate": "2025-07-08T13:44:43.553Z"
+    },
+    "isPremium": true,
+    "subscriptionEndsOn": "2025-08-07T13:44:43.553Z",
+    "superMessagesLeft": 30,
+    "swipes": -1,
+    "monthlyTokenAllowance": 30
+  },
+  "error": [],
+  "message": "Subscription activated"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the subscription activation was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Contains details about the newly activated "super" subscription and updated user status.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscription</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Details of the subscription record, now for the "super" plan.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>_id</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Unique subscription identifier.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>userId</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">ID of the user who subscribed.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>endDate</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date when the subscription will end.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>isActive</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Always <code>true</code> for an active subscription.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The subscribed plan name.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-12"><code>startDate</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date when the subscription started.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>isPremium</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The calculated end date of the "super" subscription.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessagesLeft</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Number of super messages granted by the plan (e.g., 30 for super).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>swipes</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Daily swipe limit (-1 typically means unlimited).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>monthlyTokenAllowance</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Monthly allowance for tokens (e.g., 30 for super).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3.2 Get Subscription Status (After Super Plan) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">3.2 Get Subscription Status (After Super Plan)</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/subscription/status</span></p>
+                <p class="text-gray-700 mb-4">This endpoint shows the updated subscription status after activating the "super" plan.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "active": true,
+    "plan": "super",
+    "renewalDate": "2025-08-07T13:44:43.553Z",
+    "swipeLimitPerDay": -1,
+    "monthlyTokenAllowance": 30,
+    "allowDirectMessage": true,
+    "autoRenew": true,
+    "superMessagesLeft": 30,
+    "swipesUsedToday": 0
+  },
+  "error": [],
+  "message": "Subscription active"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Updated subscription status details:</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>active</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">"super".</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>renewalDate</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The date the "super" subscription is set to renew.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>swipeLimitPerDay</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Daily swipe limit (-1 for unlimited).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>monthlyTokenAllowance</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Monthly token allowance (30 for super).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>allowDirectMessage</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code> as super plan allows direct messages.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>autoRenew</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if auto-renewal is enabled.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessagesLeft</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Remaining super messages (30 for super).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>swipesUsedToday</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Swipes used on the current day.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3.3 Get Application Configuration (After Super Plan) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">3.3 Get Application Configuration (After Super Plan)</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/config</span></p>
+                <p class="text-gray-700 mb-4">This endpoint shows the updated application configuration and feature limits after activating the "super" plan.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "shareLink": "https://miloapp.in/invite",
+    "authOptions": [
+      "google",
+      "otp"
+    ],
+    "premiumUser": true,
+    "subscriptionEndsOn": "2025-08-07T13:44:43.553Z",
+    "plan": "super",
+    "superMessageTokens": 30,
+    "dailySwipeLimit": -1,
+    "allowDirectMessage": true
+  },
+  "error": [],
+  "message": "App config loaded"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Updated application configuration and user-specific allowances, reflecting the "super" plan.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>premiumUser</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Date when the subscription ends.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">"super".</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessageTokens</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">30.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>dailySwipeLimit</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">-1 (unlimited).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>allowDirectMessage</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3.4 Get Current User Details (After Super Plan) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">3.4 Get Current User Details (After Super Plan)</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/users/current</span></p>
+                <p class="text-gray-700 mb-4">This endpoint shows the updated user profile reflecting the "super" subscription.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "_id": "686d1bde552bb16614d7927a",
+    "phone": "+917004653005",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        85.143,
+        25.645
+      ]
+    },
+    "isPremium": true,
+    "subscriptionEndsOn": "2025-08-07T13:44:43.553Z",
+    "bio": "Gullu Bio.",
+    "superMessageTokens": 30,
+    "lastTokenReset": "2025-07-08T13:44:43.558Z",
+    "dailySwipesUsed": 0,
+    "lastSwipeReset": null,
+    "plan": "super",
+    "createdAt": "2025-07-08T13:23:42.353Z",
+    "dob": "1998-07-01T00:00:00.000Z",
+    "kamraHai": "YES",
+    "nickname": "Gullu",
+    "position": "bottom",
+    "age": 27
+  },
+  "error": [],
+  "message": "User fetched successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The updated user profile, showing:</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>isPremium</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The end date of the "super" subscription.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>bio</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">"Gullu Bio.".</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessageTokens</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">30.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>lastTokenReset</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Timestamp of the last token reset, indicating when super messages were last replenished.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>dailySwipesUsed</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">0.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">"super".</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 4: Subscription Cancellation -->
+        <section class="mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold chapter-heading mb-6">Chapter 4: Subscription Cancellation</h2>
+            <p class="text-lg leading-relaxed mb-8">
+                This chapter details the process and impact of canceling an active subscription.
+            </p>
+
+            <!-- 4.1 Cancel Subscription -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">4.1 Cancel Subscription</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">POST</span> <span class="http-path">/subscription/cancel</span></p>
+                <p class="text-gray-700 mb-4">Cancels the current active subscription for the authenticated user.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": null,
+  "error": [],
+  "message": "Subscription cancelled successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the cancellation was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No specific data is returned on success.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4.2 Get Subscription Status (After Cancellation) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">4.2 Get Subscription Status (After Cancellation)</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/subscription/status</span></p>
+                <p class="text-gray-700 mb-4">This endpoint shows that the subscription is no longer active after cancellation.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "active": false,
+    "plan": null,
+    "renewalDate": null
+  },
+  "error": [],
+  "message": "No active subscription"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Updated subscription status details:</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>active</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>false</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>null</code> as there is no active plan.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>renewalDate</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>null</code> as there is no active plan.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4.3 Get Application Configuration (After Cancellation) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">4.3 Get Application Configuration (After Cancellation)</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/config</span></p>
+                <p class="text-gray-700 mb-4">This endpoint shows that the application configuration and feature limits have reverted to the non-premium state.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "shareLink": "https://miloapp.in/invite",
+    "authOptions": [
+      "google",
+      "otp"
+    ],
+    "premiumUser": false,
+    "subscriptionEndsOn": null,
+    "plan": "none",
+    "superMessageTokens": 0,
+    "dailySwipeLimit": 0,
+    "allowDirectMessage": false
+  },
+  "error": [],
+  "message": "App config loaded"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Application configuration and user-specific allowances, now back to non-premium defaults.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>premiumUser</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>false</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>null</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">"none".</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessageTokens</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">0.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>dailySwipeLimit</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">0.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>allowDirectMessage</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>false</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4.4 Get Current User Details (After Cancellation) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">4.4 Get Current User Details (After Cancellation)</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/users/current</span></p>
+                <p class="text-gray-700 mb-4">This endpoint shows the user profile reflecting the non-premium state after subscription cancellation.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "_id": "686d1bde552bb16614d7927a",
+    "phone": "+917004653005",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        85.143,
+        25.645
+      ]
+    },
+    "isPremium": false,
+    "subscriptionEndsOn": null,
+    "bio": "Gullu Bio.",
+    "superMessageTokens": 0,
+    "lastTokenReset": null,
+    "dailySwipesUsed": 0,
+    "lastSwipeReset": null,
+    "plan": null,
+    "createdAt": "2025-07-08T13:23:42.353Z",
+    "dob": "1998-07-01T00:00:00.000Z",
+    "kamraHai": "YES",
+    "nickname": "Gullu",
+    "position": "bottom",
+    "age": 27
+  },
+  "error": [],
+  "message": "User fetched successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the request was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The updated user profile, showing:</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>isPremium</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>false</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscriptionEndsOn</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>null</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>superMessageTokens</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">0.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>lastTokenReset</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>null</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>dailySwipesUsed</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">0.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>plan</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/null</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>null</code>.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="header-bg text-white text-center p-6 mt-12 rounded-t-lg">
+        <div class="container mx-auto px-4">
+            <p>&copy; Created by Vaibhav Shrivastava.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
