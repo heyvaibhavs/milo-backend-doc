@@ -58,6 +58,30 @@
             border-left: 4px solid #f59e0b; /* Orange left border */
             color: #92400e; /* Dark orange text */
         }
+        .info-box {
+            background-color: #e0f2fe; /* Light blue for info */
+            border-left: 4px solid #38b2ac; /* Teal left border */
+            color: #2c5282; /* Dark blue text */
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+        .business-rule {
+            background-color: #e6fffa; /* Light green for business rules */
+            border-left: 4px solid #38a169; /* Green left border */
+            color: #276749; /* Dark green text */
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+        .ux-flow {
+            background-color: #e0e7ff; /* Light purple for UX flow */
+            border-left: 4px solid #6b46c1; /* Purple left border */
+            color: #4a2b82; /* Dark purple text */
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -67,7 +91,7 @@
         <div class="container mx-auto px-4">
             <h1 class="text-4xl md:text-5xl font-extrabold text-center">API Documentation</h1>
             <p class="text-xl text-center mt-2 opacity-90">User Management and Subscriptions</p>
-            <p class="text-xl text-center mt-2 opacity-90">Before Match ID</p>
+            <p class="text-xl text-center mt-2 opacity-90">Before Match ID & After Match ID</p>
         </div>
     </header>
 
@@ -1613,7 +1637,7 @@
                             <tr class="table-row">
                                 <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
                                 <td class="py-2 px-4 border-b border-gray-200">object</td>
-                                <td class="py-2 px-4 border-b border-gray-200">Contains details about the newly activated "super" subscription and updated user status.</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Contains details about the newly activated subscription and updated user status.</td>
                             </tr>
                             <tr class="table-row">
                                 <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>subscription</code></td>
@@ -2344,6 +2368,780 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 5: Swiping and Messaging -->
+        <section class="mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold chapter-heading mb-6">Chapter 5: Swiping and Messaging</h2>
+            <p class="text-lg leading-relaxed mb-8">
+                This chapter details the API endpoints related to user interactions like swiping on profiles, sending and receiving SuperMessages, and engaging in regular chat once a match is formed.
+            </p>
+
+            <!-- 5.1 Initiate Swipe -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">5.1 Initiate Swipe</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">POST</span> <span class="http-path">/swipe</span></p>
+                <p class="text-gray-700 mb-4">Records a user's swipe action (like or dislike) on another user's profile. This action can lead to a match if both users "like" each other.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Request Body Example (Like):</h4>
+                <pre class="code-block"><code>{
+  "targetUserId": "686d561b836696a69f6bbc31",
+  "action": "like"
+}</code></pre>
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body Example (Dislike):</h4>
+                <pre class="code-block"><code>{
+  "targetUserId": "686d561b836696a69f6bbc31",
+  "action": "dislike"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>targetUserId</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The unique ID of the user being swiped on.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>action</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The type of swipe action: "like" or "dislike".</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK) - No Match:</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "match": false,
+    "remainingSwipes": "unlimited"
+  },
+  "error": [],
+  "message": "Swipe like recorded"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK) - Match:</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "match": true,
+    "remainingSwipes": "unlimited"
+  },
+  "error": [],
+  "message": "It’s a match!"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the swipe action was successful.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Contains details about the swipe outcome.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>match</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200"><code>true</code> if a match was formed, <code>false</code> otherwise.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>remainingSwipes</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string/number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Number of swipes left for the day, or "unlimited" for premium users.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5.2 Current User Status After Swiping -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">5.2 Current User Status After Swiping</h3>
+                <p class="text-gray-700 mb-4">
+                    After a swipe, the user's profile details, particularly <code>dailySwipesUsed</code> and <code>superMessageTokens</code> (if applicable), are updated. This is reflected when fetching the current user's profile.
+                </p>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/users/current</span></p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "_id": "686d55c7836696a69f6bbc29",
+    "phone": "+911122334455",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        85.143,
+        25.645
+      ]
+    },
+    "isPremium": true,
+    "subscriptionEndsOn": "2025-08-07T17:35:23.420Z",
+    "bio": "Gullu Bio.",
+    "superMessageTokens": 29,
+    "lastTokenReset": "2025-07-08T17:35:23.425Z",
+    "dailySwipesUsed": 2,
+    "lastSwipeReset": "2025-07-08T17:41:54.346Z",
+    "plan": "super",
+    "createdAt": "2025-07-08T17:30:47.302Z",
+    "dob": "1998-07-01T00:00:00.000Z",
+    "kamraHai": "YES",
+    "nickname": "User1",
+    "position": "bottom",
+    "age": 27
+  },
+  "error": [],
+  "message": "User fetched successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Key Changes in Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Impact</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>dailySwipesUsed</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">Increments</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Shows the number of swipes made by the user today.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>lastSwipeReset</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">Updates</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Timestamp of the last daily swipe limit reset.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>superMessageTokens</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">Decrements (if SuperMessage sent)</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Remaining SuperMessage tokens.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5.3 Super Messages -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">5.3 Super Messages</h3>
+                <p class="text-gray-700 mb-4">
+                    SuperMessages are a premium feature allowing users to send a direct message to another user before a match is formed, consuming a SuperMessage token.
+                </p>
+
+                <div class="info-box">
+                    <p><strong>Q1: Should Basic users receive SuperMessages?</strong></p>
+                    <p>✅ Yes — they should receive SuperMessages.</p>
+                    <p><strong>Why?</strong></p>
+                    <ul>
+                        <li>Creates FOMO (fear of missing out): “Someone messaged me, I can’t reply unless I match or upgrade.”</li>
+                        <li>Drives premium conversions: unlock reply by upgrading.</li>
+                        <li>Increases engagement for both sides.</li>
+                    </ul>
+                </div>
+
+                <div class="business-rule">
+                    <strong>🔒 Business Rule:</strong> Basic users can view SuperMessages, but cannot reply until a match is made or they upgrade to a plan that allows replies.
+                </div>
+
+                <div class="info-box">
+                    <p><strong>Q2: What if user B wants to reply but not match?</strong></p>
+                    <p>❌ Don't allow that — replying = engaging = match should be formed.</p>
+                    <p><strong>Best Business Logic:</strong></p>
+                    <ul>
+                        <li>Replying to a SuperMessage = Accepting the match.</li>
+                        <li>Once User B replies → create a match (if not already).</li>
+                        <li>Move all further chat to the MatchChat system.</li>
+                        <li>SuperMessage becomes the first message.</li>
+                    </ul>
+                </div>
+
+                <div class="ux-flow">
+                    <strong>UX Flow (SuperMessage Reply):</strong>
+                    <p>SuperMessage arrives: "Abhishek sent you a message: 'Hey there 😄'"</p>
+                    <p>Options shown:</p>
+                    <ul>
+                        <li>"Reply and match" → proceeds to MatchChat</li>
+                        <li>"Ignore" → no action</li>
+                    </ul>
+                </div>
+
+                <!-- 5.3.1 Send Super Message -->
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">5.3.1 Send Super Message</h4>
+                <p class="text-lg font-mono mb-2"><span class="http-method">POST</span> <span class="http-path">/supermessage/send</span></p>
+                <p class="text-gray-700 mb-4">Allows a user to send a direct message to another user, consuming a SuperMessage token.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Request Body Example:</h4>
+                <pre class="code-block"><code>{
+  "toUserId": "686d561b836696a69f6bbc31",
+  "message": "Hey there! First Message"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>toUserId</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The ID of the user to whom the SuperMessage is sent.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The content of the SuperMessage.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "tokensLeft": 28
+  },
+  "error": [],
+  "message": "SuperMessage sent"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the SuperMessage was sent successfully.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Contains details about remaining tokens.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>tokensLeft</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">number</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The number of SuperMessage tokens remaining for the sender.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 5.3.2 Super Message Inbox -->
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">5.3.2 Super Message Inbox</h4>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/supermessage/inbox</span></p>
+                <p class="text-gray-700 mb-4">Used by the receiver of SuperMessages to see who has sent them a SuperMessage.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>[
+  {
+    "_id": "messageId",
+    "fromUser": {
+      "nickname": "Abhishek",
+      "position": "bottom"
+    },
+    "message": "Hey! 😊",
+    "replied": false
+  }
+]</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>_id</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The unique ID of the SuperMessage.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>fromUser</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Details of the user who sent the SuperMessage.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>nickname</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Nickname of the sender.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>position</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Position of the sender.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The content of the SuperMessage.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>replied</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the receiver has already replied to this SuperMessage.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="info-box mt-4">
+                    <strong>📌 Use Cases:</strong>
+                    <ul>
+                        <li>Show a list of incoming premium messages to the user.</li>
+                        <li>Display an "Unlock to Reply" button for unreplied messages.</li>
+                        <li>Do not show the full chat history here — just the first contact message.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 5.3.3 Reply to Super Message (Accept Match) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">5.3.3 Reply to Super Message (Accept Match)</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">POST</span> <span class="http-path">/supermessage/reply</span></p>
+                <p class="text-gray-700 mb-4">Allows the receiver of a SuperMessage to reply, which automatically creates a match and unlocks the chat for both users.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Request Body Example:</h4>
+                <pre class="code-block"><code>{
+  "messageId": "686d65f7565d93377fe1307a",
+  "text": "Hey! Nice to hear from you"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>messageId</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The ID of the SuperMessage being replied to.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>text</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The content of the reply message.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": null,
+  "error": [],
+  "message": "Reply recorded and match created"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the reply was recorded and match created successfully.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">null</td>
+                                <td class="py-2 px-4 border-b border-gray-200">No specific data is returned on success.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="business-rule mt-4">
+                    <strong>✅ What it does:</strong>
+                    <ul>
+                        <li>Validates that the message belongs to the logged-in user.</li>
+                        <li>Creates a match with the sender.</li>
+                        <li>Marks the SuperMessage as <code>replied: true</code>.</li>
+                        <li>Chat is now unlocked for both users via <code>/messages</code>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 5.4 Regular Messaging (After Match) -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">5.4 Regular Messaging (After Match)</h3>
+                <p class="text-gray-700 mb-4">
+                    Once a match is established (either through mutual likes or a SuperMessage reply), users can exchange messages in a dedicated chat room.
+                </p>
+
+                <!-- 5.4.1 Send Message in Match Chat -->
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">5.4.1 Send Message in Match Chat</h4>
+                <p class="text-lg font-mono mb-2"><span class="http-method">POST</span> <span class="http-path">/messages/send</span></p>
+                <p class="text-gray-700 mb-4">Sends a message within an existing match chat.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mb-2">Request Body Example:</h4>
+                <pre class="code-block"><code>{
+  "matchId": "686d58ae836696a69f6bbc4d",
+  "text": "Hey there! 😊"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>matchId</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The ID of the match chat.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>text</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The content of the message.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    "matchId": "686d58ae836696a69f6bbc4d",
+    "fromUser": "686d55c7836696a69f6bbc29",
+    "text": "Hey there! 😊",
+    "read": false,
+    "_id": "686d73de988b35da6c189869",
+    "timestamp": "2025-07-08T19:39:10.435Z",
+    "__v": 0
+  },
+  "error": [],
+  "message": "Message sent"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the message was sent successfully.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">object</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Details of the sent message.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>matchId</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The ID of the match chat the message belongs to.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>fromUser</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The ID of the user who sent the message.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>text</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The content of the message.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>read</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the message has been read by the recipient (initially <code>false</code>).</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>_id</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Unique ID of the message.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>timestamp</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Timestamp when the message was sent.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5.4.2 Get All Messages in Match Chat -->
+            <div class="endpoint-card p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl md:text-3xl font-semibold section-heading mb-4">5.4.2 Get All Messages in Match Chat</h3>
+                <p class="text-lg font-mono mb-2"><span class="http-method">GET</span> <span class="http-path">/messages/{matchId}</span></p>
+                <p class="text-gray-700 mb-4">Retrieves all messages for a specific match chat. When a user views this chat, all unread messages sent to them will be marked as read.</p>
+
+                <div class="auth-note p-4 rounded-md mt-4 mb-4">
+                    <strong>Authentication:</strong> Bearer Token
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Path Parameters:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Parameter</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Required</th>
+                                <th class="py-2 px-4 text-left table-header rounded-tr-lg">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>matchId</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Yes</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The unique ID of the match chat to retrieve messages from.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Successful Response (200 OK):</h4>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": [
+    {
+      "_id": "686d73de988b35da6c189869",
+      "matchId": "686d58ae836696a69f6bbc4d",
+      "fromUser": "686d55c7836696a69f6bbc29",
+      "text": "Hey there! 😊",
+      "read": false,
+      "timestamp": "2025-07-08T19:39:10.435Z",
+      "__v": 0
+    },
+    {
+      "_id": "686d77c6988b35da6c18986d",
+      "matchId": "686d58ae836696a69f6bbc4d",
+      "fromUser": "686d561b836696a69f6bbc31",
+      "text": "Hello",
+      "read": false,
+      "timestamp": "2025-07-08T19:55:50.945Z",
+      "__v": 0
+    }
+  ],
+  "error": [],
+  "message": "Messages fetched successfully"
+}</code></pre>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Response Fields:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left table-header rounded-tl-lg">Field</th>
+                                <th class="py-2 px-4 text-left table-header">Type</th>
+                                <th class="py-2 px-4 text-left table-header">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>success</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the messages were fetched successfully.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>data</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array of objects</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A list of message objects within the specified match chat.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>_id</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Unique ID of the message.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>matchId</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The ID of the match chat the message belongs to.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>fromUser</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The ID of the user who sent the message.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>text</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">The content of the message.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>read</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">boolean</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Indicates if the message has been read by the recipient.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200 pl-8"><code>timestamp</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">Timestamp when the message was sent.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>error</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">array</td>
+                                <td class="py-2 px-4 border-b border-gray-200">An empty array if no errors occurred.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-2 px-4 border-b border-gray-200"><code>message</code></td>
+                                <td class="py-2 px-4 border-b border-gray-200">string</td>
+                                <td class="py-2 px-4 border-b border-gray-200">A descriptive message indicating the outcome.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="info-box mt-4">
+                    <strong>Message Read Status Logic:</strong>
+                    <ul>
+                        <li>When User A sends a message, it is created with <code>read: false</code>.</li>
+                        <li>When User B logs in and views the chat (by calling <code>GET /messages/{matchId}</code>), the backend will automatically mark all unread messages sent to User B as <code>read: true</code>.</li>
+                    </ul>
                 </div>
             </div>
         </section>
